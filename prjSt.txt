@@ -1,0 +1,374 @@
+install vscode
+
+node install: download and install
+
+cmd=>
+npm install -g @angular/cli
+
+ng new ProjectName
+
+
+open vs code in correct location
+
+json server=>
+npm install -g json-server
+
+
+bootstrap setup=>
+go to bootstrap -> copy two things -> css and jss file and paste in index.html
+
+
+start server=>
+ng serve -o
+
+ng g c EmployeeDashboard
+
+add <app-employee-dashboard></app-employee-dashboard> in app.component.html
+
+Open employee-dashboard.html => 
+navbar -> container-fluid -> h1 Heading -> d-flex -> button 
+
+table-> th*6 -> td*6 -> button*2 edit delete btn btn-info
+
+
+Now, clicking on Add Employee -> model open to add a employee.
+
+Open bootstrap -> copy modal code and paste below the table ->
+Button all element copy to "add employee " button.
+Delete the modal button.
+
+Add modal title "emp details"
+"Save changes" to "add"
+
+For form -> using bootstrap form
+copy form code form bstrp  paste it in modal content ...
+
+remove all unnecessary things
+rename as first name , last name etc.
+remove checkbox and submit button.
+
+**********
+Go to Employee-dashboard.ts
+import two things i.e. FormBuilder, FormGroup from '@angular/forms
+
+initialize formValue!:FormGroup in class EmployeeDashboardComponent
+
+Constructor inject formBuilder as
+constructor(private formbuilder: FormBuilder) 
+
+Add formValue as
+this.formValue = this.formbuilder.group({
+      firstName: [''],
+      lastName: [''],
+      email: [''],
+      mobile: [''],
+      salary: ['']
+    });
+
+
+*************
+copy formValue and add that in form group in html file as
+<form [formGroup]="formValue">
+
+and all the input tag has a form control name as
+formControlName= "firstName"
+
+***************
+after that open :app.module.ts:
+and import ReactiveFormsModule
+***************
+
+Now, use json -server to save data,
+
+Install JSON server
+npm install -g json-server
+
+after install run it 
+json-server  --watch db.json
+
+now our server is running.
+
+*****************************
+
+now copy path of json server where data is to be saved.
+Like: http://localhost:3000/posts
+
+*****************************
+
+Now create 4 apis
+inside app folder create a folder to serve services,
+named as 'shared'
+
+inside this create an API service.
+
+CREATING A SERVICE
+ng g s shared/api
+
+now inside shared folder there are create api.service.spec.ts and ts file.
+
+don't need to spec file so delete it.
+
+**************
+Inside service call all apis here,
+
+1st) import { HttpClient } from '@angular/common/http';
+
+2) in App.module.ts 
+import HttpClientModule
+
+3rd) inject httpClient in constructor in api.service.ts file as
+constructor(private http : HttpClient) { }
+
+4th) create 4 methods
+
+ postEmployee(data: any){
+    return this.http.post<any>("http://localhost:3000/posts",data)
+    .pipe(map((res:any)=>{
+      return res;
+    })); 
+  }
+
+  getEmployee(){
+    return this.http.get<any>("http://localhost:3000/posts")
+    .pipe(map((res:any)=>{
+      return res;
+    }))
+  }
+
+  updateEmployee(data:any, id:number){
+    return this.http.put<any>("http://localhost:3000/posts/"+id,data)
+    .pipe(map((res:any)=>{
+      return res;
+    }))
+  }
+
+  deleteEmployee(id:number){
+    return this.http.delete<any>("http://localhost:3000/posts/"+id)
+    .pipe(map((res:any)=>{
+      return res;
+    }))
+  }
+
+--***********************
+ create a module
+
+ Add a file in employee dashboard as
+
+ employee-dashboard.model.ts
+
+ then 
+ write the class to export
+
+ export class EmployeeModel{
+    id : number =0;
+    firstName : string = '';
+    lastName : string = '';
+    email : string = '';
+    mobile : string = '';
+    salary: string = '';
+}
+
+and create an object in employee-dashboard.component.ts file so that we can pass the object to the server. as
+
+employeeModuleObj : EmployeeModel = new EmployeeModel();
+
+*************************+
+
+
+and add import 
+import { ApiService } from '../shared/api.service';
+in employee-dashboard.component.ts
+
+and use api in constructor
+constructor(private formbuilder: FormBuilder, private api : ApiService)
+
+
+
+*************************
+
+To post the data create a method in employee-dashboard.component.ts file
+
+  postEmployeeDetails(){
+    this.employeeModuleObj.firstName = this.formValue.value.firstName;
+    this.employeeModuleObj.lastName = this.formValue.value.lastName;
+    this.employeeModuleObj.email = this.formValue.value.email;
+    this.employeeModuleObj.mobile = this.formValue.value.mobile;
+    this.employeeModuleObj.salary= this.formValue.value.salary;
+
+after that call api
+and subscribe to it
+and if error then alert
+
+	 this.api.postEmployee(this.employeeModuleObj)
+    .subscribe(res=>{
+      console.log(res);
+      alert("Employee added successfully.");
+    },
+    err={
+      alert("Something went wrong");
+    })
+
+postEmployeeDetails ready now, and copy method name and bind it in buttonclick from form submut.
+(click)="postEmployeeDetails()"
+
+****************************
+
+from empl-dash.component.html -> close button set id as id="cancle", and in 
+empl-dash.component.ts file set this lines after employee added successfully alert command
+
+      let ref= document.getElementById('cancle')
+      ref?.click();
+
+after add an employee modal goes off auto.
+***********************
+fetch data from json server and show the results,
+
+In empl-dash.component.ts file create and api method 
+getAllEmployee(){
+    this.api.getEmployee()
+    .subscribe(res=>{
+      this.employeeData = res;
+    })
+  }
+
+and create a perticular property for it, i.e. employeeData !: any;
+before constructor.
+
+after that, open empl-dash.component.html and goto tr tag where data is shown,
+
+ <tr *ngFor="let row of employeeData">
+            <td>{{row.id}}</td>
+            <td>{{row.firstName}}</td>
+            <td>{{row.lastName}}</td>
+            <td>{{row.email}}</td>
+            <td>{{row.mobile}}</td>
+            <td>{{row.salary}}</td>
+
+after that call this method from empl-dash.component.ts in ngOnInit() function. i.e.
+
+ngOnInit(): void {
+    this.formValue = this.formbuilder.group({
+      firstName: [''],
+      lastName: [''],
+      email: [''],
+      mobile: [''],
+      salary: ['']
+    });
+    this.getAllEmployee();
+
+and also call that function from postEmployeeDetails() methods, inside res true part i.e. 
+.subscribe((res: any)=>{
+      console.log(res);
+      alert("Employee added successfully.");
+      let ref= document.getElementById('cancle')
+      ref?.click();
+      this.formValue.reset();
+      this.getAllEmployee();
+    }
+
+
+*****************************
+Delete a record,
+
+create delete method in e-d.component.ts 
+
+ deleteEmployee(row : any){
+    this.api.deleteEmployee(row.id)
+    .subscribe(res=>{
+      alert("Employee Deleted");
+      this.getAllEmployee();
+    })
+  }
+
+and call it from .html file as 
+<button (click)="deleteEmployee(row)" class="btn btn-danger">Delete</button>
+here, taking an argument as "row"
+ to delete that data.
+
+**********************************
+
+Now EDIT
+now copy the model 3 attributes from add employee button and paste it in edit button from .html file.
+
+type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+
+To fille with value we create a api method, in .ts file, as
+
+onEdit(row:any){
+    this.formValue.controls['firstName'].setValue(row.firstName);
+    this.formValue.controls['lastName'].setValue(row.lastName);
+    this.formValue.controls['email'].setValue(row.email);
+    this.formValue.controls['mobile'].setValue(row.mobile);
+    this.formValue.controls['salary'].setValue(row.salary);
+  }
+
+call this method from .html file.
+(click)="onEdit(row)"
+
+now, add button should be replaced with update button, to do it ,
+in .html file, 
+
+create UPDATE button below ADD button,
+<button type="button" (click)="updateEmployeeDetails()" class="btn btn-primary">Update</button>
+
+after that create a api method, and in .ts file,
+
+copy post method lines and in onEdit method store employeeModuleObj.id value 
+
+after that api.updateEmployee needs two arguments i,e, empObject and object Id.
+
+after that subscribe it. in postive res alert update success and close the form as done in add employee method.
+
+ updateEmployeeDetails(){
+    this.employeeModuleObj.firstName = this.formValue.value.firstName;
+    this.employeeModuleObj.lastName = this.formValue.value.lastName;
+    this.employeeModuleObj.email = this.formValue.value.email;
+    this.employeeModuleObj.mobile = this.formValue.value.mobile;
+    this.employeeModuleObj.salary= this.formValue.value.salary;
+
+    this.api.updateEmployee(this.employeeModuleObj, this.employeeModuleObj.id)
+    .subscribe(res=>{
+      alert("Updated Successfully");
+      let ref= document.getElementById('cancle')
+      ref?.click();
+      this.formValue.reset();
+      this.getAllEmployee();
+      
+    })
+  }
+
+**************
+Now hide add or update according to condition,
+
+To do add a function
+clickAddEmployee()
+and create a boolean variable as 
+  showAdd!:boolean;
+  showUpdate!:boolean;
+
+ clickAddEmployee(){
+    this.formValue.reset();
+    this.showAdd=true;
+    this.showUpdate= false;
+  }
+
+in the same way when click on onEdit,
+onEdit(row:any){
+    this.showAdd=false;
+    this.showUpdate= true;
+    this.employeeModuleObj.id= row.id;
+    ...
+
+
+now call clickAddEmp method from add button from .html file.
+
+
+ <button (click)="clickAddEmployee()" class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
+                Employee</button>
+
+
+Now use ngIF to hide the button,
+add *ngIf="showAdd" in add Button.
+and *ngIf="showUpdate" in update button as well.
+
+

@@ -1,0 +1,32 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "firstName": "SK",
+      "lastName": "SAIFUDDIN",
+      "email": "DRONESPICTUR111@GMAIL.COM",
+      "mobile": 7099705930,
+      "salary": 45000
+    },
+    {
+      "id": 2,
+      "firstName": "SUBROJIT ",
+      "lastName": "CHATTERJEE",
+      "email": "this@that.com",
+      "mobile": 89000000,
+      "salary": 45000
+    },
+    {
+      "id": 3,
+      "firstName": "SANGEETA",
+      "lastName": "MAJUMDAR",
+      "email": "S@STHAT.COM",
+      "mobile": 89000000,
+      "salary": 45000
+    }
+  ],
+  "comments": [],
+  "profile": {
+    "name": "typicode"
+  }
+}

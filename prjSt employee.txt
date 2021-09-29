@@ -372,3 +372,118 @@ add *ngIf="showAdd" in add Button.
 and *ngIf="showUpdate" in update button as well.
 
 
+*********************
+create login and signup component,
+
+then set app.module.html as router-outlet/
+
+now, set paths from app routing.module.ts,
+
+const routes: Routes = [
+{path:'', redirectTo:'login', pathMatch:'full'},
+{path:"login",component:LoginComponent},
+{path:"signup",component:SignupComponent}
+{path:"dashboard",component:EmployeeDashboardComponent}
+];
+*************************
+
+go to login.container.html file and 
+
+create a form for login page and then create as well as for sign up page.
+Do some css here,.
+
+now add cross links for easily go one and another page.
+
+
+Make own db array in db.json for stroing signup users details.
+
+To signup we need to import reactiveFormModule.
+in app.module.ts as well as FormsModule.
+
+****************
+For it 3 things import in signup component. ts file
+
+FormBuilder, FormGroup
+
+
+create a property to hold the form group, named as signupForm
+
+in constructor imvoke FormBuilder.
+
+Now in ngOnInit, make formBuilder group to save the format of form.
+
+now provide fromGroup in .html file 2nd form tag and assign form group name.
+signupForm
+
+after it, 
+
+in every input tag assign formControlName according which is assigned .ts file.
+
+then,
+
+for button click call a method ngSubmit.
+
+<form [formGroup]="signupForm" (ngSubmit)="signUp()">
+
+then write fun in .ts file for signUp()
+
+to do , in constructor inject httpclient
+that is imported in app.module.ts file.
+
+now using http.post method we can post it to server json file.
+
+then pass the value with the link, then subscribe it and also  reset signupForm;
+
+after signup to route to the login page 
+have to import router in constructor.
+
+ constructor(private formBuilder : FormBuilder, private http: HttpClient , private router: Router)
+
+ now route accordingly using navigate method.
+
+***********************
+
+Now use for login,
+import formBuilder and formGroup in login.ts file,
+
+now create a property for login form.
+
+ public loginForm !: FormGroup;
+
+ and inject formBuilder inside constructor.
+
+and then, create login form formBuilder group for  email:[''],
+      password:['']
+
+Now, .html file provide formGroup and property should match.
+
+and for every input there are formControlName
+
+now, to submit the form we have ngSubmit in form section provide it. call login() method.
+
+for login call, in .ts file , inside constructor, 
+inject HttpCliet
+and the router as
+
+private formBuilder: FormBuilder, private http:HttpClient, private router:Router
+
+*************
+Implement login page,
+
+and using http://localhost:3000/signupUsers
+link fetch all information,
+from json data inside login method.
+
+and subscribe it, if res is true then 
+inside user res.find return the valid access or not.
+and 
+
+this.router.navigate('dashboard');
+
+and implement err also.
+
+**************************
+
+Logout button.
+
+

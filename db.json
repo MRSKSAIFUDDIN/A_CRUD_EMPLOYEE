@@ -25,7 +25,22 @@
       "salary": 45000
     }
   ],
-  "comments": [],
+  "signupUsers": [
+    {
+      "fullname": "Allah",
+      "mobile": "786666666",
+      "email": "a@a.in",
+      "password": "aa",
+      "id": 1
+    },
+    {
+      "fullname": "Sakti kapoor",
+      "mobile": "80000000",
+      "email": "sk@sk.in",
+      "password": "12",
+      "id": 2
+    }
+  ],
   "profile": {
     "name": "typicode"
   }
